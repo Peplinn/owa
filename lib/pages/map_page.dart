@@ -308,7 +308,7 @@ class _MapPageState extends State<MapPage> {
                                 ),
                               ),
           
-                              Center(
+                              (_originInputController.text == "" && _destinationInputController.text == "") ? Center() : Center(
                                 // FIND BUS BUTTON
                                 child: FilledButton(
                                   onPressed: () {}, 
