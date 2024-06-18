@@ -308,7 +308,7 @@ class _MapPageState extends State<MapPage> {
                                 ),
                               ),
           
-                              (_originInputController.text == "" && _destinationInputController.text == "") ? Center() : Center(
+                              (_originInputController.text == "" || _destinationInputController.text == "") ? Center() : Center(
                                 // FIND BUS BUTTON
                                 child: FilledButton(
                                   onPressed: () {}, 
@@ -646,6 +646,14 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
     Navigator.pop(context); // Close the bottom sheet
   }
 
+
+  // @override
+  // void dispose() {
+  //   // Clean up the controller when the widget is disposed.
+  //   firstButton ? _originInputController.dispose() : _destinationInputController.dispose();
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -843,6 +851,8 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
           ),
         ),
     );
+
+    
   }
 
   void updateTextButton(BuildContext context, String location) {
