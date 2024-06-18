@@ -744,10 +744,10 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                               // color: firstButton ? Colors.green,
                             ),
 
-                            suffixIcon: Icon(
-                              Icons.cancel_rounded,
-                              size: 20,
-                            )
+                            // suffixIcon: Icon(
+                            //   Icons.cancel_rounded,
+                            //   size: 20,
+                            // )
                           ),
                           onChanged: (String value) {
                             // TODO: DEBOUNCE
@@ -821,7 +821,10 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => {
+                      Navigator.pop(context),
+                      firstButton ? _originInputController.clear() : _destinationInputController.clear(),
+                      },
                     child: Text('Cancel',
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
