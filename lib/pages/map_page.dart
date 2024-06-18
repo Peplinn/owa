@@ -250,6 +250,9 @@ class _MapPageState extends State<MapPage> {
                                     ),
                                     label: Text(
                                       _originInputController.text == "" ? 'Origin' : "${_originInputController.text}",
+                                      style: TextStyle (
+                                        color: _originInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.indigo,
+                                      )
                                     ),
                                   ),
                                 ),
@@ -272,7 +275,7 @@ class _MapPageState extends State<MapPage> {
                                       textStyle: TextStyle(
                                         
                                         textBaseline: TextBaseline.ideographic,
-                                        color: Color.fromARGB(255, 148, 138, 138),
+                                        color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
                                         fontWeight: FontWeight.normal,
                                         fontSize: 20,
                                         fontStyle: FontStyle.normal,
@@ -303,6 +306,9 @@ class _MapPageState extends State<MapPage> {
                                     label: Text(
 
                                       _destinationInputController.text == "" ? 'Destination' : "${_destinationInputController.text}",
+                                      style: TextStyle (
+                                        color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
+                                      )
                                       ),
                                   ),
                                 ),
