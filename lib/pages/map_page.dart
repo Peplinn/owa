@@ -733,7 +733,7 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                         TextFormField(
                           //controller: dropOffAddressController,
                           controller: firstButton ? _originInputController : _destinationInputController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             isDense: true,
                             hintText: "Select Location",
                             // hintText: firstButton ? "Select Origin" : "Select Destination",
@@ -744,10 +744,14 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                               // color: firstButton ? Colors.green,
                             ),
 
-                            // suffixIcon: Icon(
-                            //   Icons.cancel_rounded,
-                            //   size: 20,
-                            // )
+                            suffixIcon: IconButton(
+                              onPressed: () => firstButton ? _originInputController.clear() : _destinationInputController.clear(),
+                              icon: Icon(
+                                Icons.close_rounded,
+                                size : 20,
+                              ),
+                              
+                            )
                           ),
                           onChanged: (String value) {
                             // TODO: DEBOUNCE
