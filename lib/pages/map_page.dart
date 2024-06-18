@@ -13,6 +13,19 @@ import 'package:owa/consts.dart';
 //import 'package:get/get.dart';
 import 'package:location/location.dart';
 
+bool firstButton = true; 
+final _originInputController = TextEditingController();
+final _destinationInputController = TextEditingController();
+
+// final List<LatLng> directions;
+// final List<AddressSuggestion> searchResultsLocation;
+
+@override
+void dispose() {
+  _originInputController.dispose();
+  _destinationInputController.dispose();
+}
+
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
@@ -27,6 +40,8 @@ class _MapPageState extends State<MapPage> {
     target: LatLng(6.605874, 3.349149), // COORDINATES FOR IKEJA LAGOS
     zoom: 13,
   );
+
+  
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -107,8 +122,8 @@ class _MapPageState extends State<MapPage> {
             //_currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
             //_cameraToPosition(_currentP!)
             getUserCurrentLocation().then((value) {
-              print("My Current Location");
-              print(value.latitude.toString() + " " + value.longitude.toString());
+              // print("My Current Location");
+              // print(value.latitude.toString() + " " + value.longitude.toString());
               _cameraToPosition(LatLng(value.latitude, value.longitude));
             })
           },
@@ -223,14 +238,19 @@ class _MapPageState extends State<MapPage> {
                                         borderRadius: BorderRadius.circular(24.0),
                                       ), 
                                     ),
-                                    onPressed: () => {},
+                                    onPressed: () => {
+                                      firstButton = true,
+                                      showLocationInput(context),
+                                    },
                                     icon: Icon(
                                     
                                       Icons.trip_origin,
                                       color: Colors.indigo,
                                       size: MediaQuery.of(context).size.width * 0.05,
                                     ),
-                                    label: Text('Current Location',),
+                                    label: Text(
+                                      _originInputController.text == "" ? 'Origin' : "${_originInputController.text}",
+                                    ),
                                   ),
                                 ),
                               ),
@@ -266,6 +286,7 @@ class _MapPageState extends State<MapPage> {
                                       ), 
                                     ),
                                     onPressed: () {
+                                      firstButton = false;
                                       showLocationInput(context);
                                     },
                                     // => Navigator.push(
@@ -279,7 +300,10 @@ class _MapPageState extends State<MapPage> {
                                       size: MediaQuery.of(context).size.width * 0.05,
                                       color: Colors.green,
                                     ),
-                                    label: Text('Destination',),
+                                    label: Text(
+
+                                      _destinationInputController.text == "" ? 'Destination' : "${_destinationInputController.text}",
+                                      ),
                                   ),
                                 ),
                               ),
@@ -625,7 +649,7 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: MediaQuery.of(context).size.height * 0.87,
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.vertical(
@@ -637,8 +661,9 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
           top: false,
           child: Column(
             children: [
+              
               Text(
-                'Select your destination',
+                firstButton ? 'Select your Origin' : 'Select your Destination',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -699,14 +724,22 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                         // ),
                         TextFormField(
                           //controller: dropOffAddressController,
+                          controller: firstButton ? _originInputController : _destinationInputController,
                           decoration: const InputDecoration(
                             isDense: true,
-                            hintText: 'Select Destination',
-                            prefixIcon: Icon(Icons.trip_origin,
+                            hintText: "Select Location",
+                            // hintText: firstButton ? "Select Origin" : "Select Destination",
+                            prefixIcon: Icon(
+                              Icons.trip_origin,
                               size: 20,
                               //size: MediaQuery.of(context).size.width * 0.05,
-                              color: Colors.green,
+                              // color: firstButton ? Colors.green,
                             ),
+
+                            suffixIcon: Icon(
+                              Icons.cancel_rounded,
+                              size: 20,
+                            )
                           ),
                           onChanged: (String value) {
                             // TODO: DEBOUNCE
