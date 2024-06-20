@@ -12,6 +12,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:owa/consts.dart';
 //import 'package:get/get.dart';
 import 'package:location/location.dart';
+import 'bus_page.dart';
 
 bool firstButton = true; 
 final _originInputController = TextEditingController();
@@ -169,7 +170,7 @@ class _MapPageState extends State<MapPage> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            //mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               RichText(
                                 text: TextSpan(
@@ -242,6 +243,7 @@ class _MapPageState extends State<MapPage> {
                                       firstButton = true,
                                       showLocationInput(context),
                                     },
+                                    // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
                                     icon: Icon(
                                     
                                       Icons.trip_origin,
@@ -292,12 +294,8 @@ class _MapPageState extends State<MapPage> {
                                       firstButton = false;
                                       showLocationInput(context);
                                     },
-                                    // => Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => LocationInputContainer(),
-                                    //   ),
-                                    // ),
+                                    
+                                    // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
                                     icon: Icon(
                                       Icons.trip_origin,
                                       size: MediaQuery.of(context).size.width * 0.05,
@@ -317,11 +315,17 @@ class _MapPageState extends State<MapPage> {
                               (_originInputController.text == "" || _destinationInputController.text == "") ? Center() : Center(
                                 // FIND BUS BUTTON
                                 child: FilledButton(
-                                  onPressed: () {}, 
-                                  // style: ButtonStyle(
-                                  //   backgroundColor: WidgetStatePropertyAll(Colors.green),
-                                    
-                                  // ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BusPage(
+                                          origin: _originInputController.text,
+                                          destination: _destinationInputController.text,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   style: FilledButton.styleFrom(
                                     backgroundColor: Colors.green,
                                     fixedSize: Size(
@@ -737,6 +741,12 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                         //   ),
                         // ),
                         TextFormField(
+                          textCapitalization: TextCapitalization.words,
+                          textAlignVertical: TextAlignVertical.center,
+                          style: TextStyle(
+                            color: firstButton ? Colors.indigo : Colors.green,
+                            fontSize: 20,
+                          ),
                           //controller: dropOffAddressController,
                           controller: firstButton ? _originInputController : _destinationInputController,
                           decoration: InputDecoration(
@@ -747,7 +757,7 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                               Icons.trip_origin,
                               size: 20,
                               //size: MediaQuery.of(context).size.width * 0.05,
-                              // color: firstButton ? Colors.green,
+                              color: firstButton ? Colors.indigo : Colors.green,
                             ),
 
                             suffixIcon: IconButton(
