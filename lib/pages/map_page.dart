@@ -211,135 +211,137 @@ class _MapPageState extends State<MapPage> {
                               
           
                               Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: TextButton.icon(
+                                child: TextButton.icon(
+                                  
+                                  // TEXT BUTTON ICON FOR THE CURRENT LOCATION
+                                  style: TextButton.styleFrom(
+                                    alignment: Alignment.centerLeft,
+                                    //alignment: Alignment(MediaQuery.of(context).size.width * 0.0001, MediaQuery.of(context).size.width * 0.05),
+                                    //fixedSize: Size(500, 75),
+                                    fixedSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.width * 0.11
+                                    ),
                                     
-                                    // TEXT BUTTON ICON FOR THE CURRENT LOCATION
-                                    style: TextButton.styleFrom(
-                                      alignment: Alignment.centerLeft,
-                                      //alignment: Alignment(MediaQuery.of(context).size.width * 0.0001, MediaQuery.of(context).size.width * 0.05),
-                                      //fixedSize: Size(500, 75),
-                                      fixedSize: Size(
-                                        MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.width * 0.09
-                                      ),
+                                    // textStyle: TextStyle(
                                       
-                                      textStyle: TextStyle(
-                                        height: 1.5,
-                                        color: Color.fromARGB(255, 148, 138, 138),
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 20,
-                                        fontStyle: FontStyle.normal,
-                                        fontFamily: 'Poppins',
-                                        
-                                      ),
-                                      foregroundColor: Color.fromARGB(255, 148, 138, 138),
-                                      backgroundColor: Color.fromARGB(255, 188, 231, 195),
-                                      shape:RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(24.0),
-                                      ), 
-                                    ),
-                                    onPressed: () => {
-                                      firstButton = true,
-                                      showLocationInput(context),
-                                    },
-                                    // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
-                                    icon: Icon(
-                                    
-                                      Icons.trip_origin,
-                                      color: Colors.indigo,
-                                      size: MediaQuery.of(context).size.width * 0.05,
-                                    ),
-                                    label: Text(
-                                      _originInputController.text == "" ? 'Origin' : "${_originInputController.text}",
-                                      style: TextStyle (
-                                        color: _originInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.indigo,
-                                      )
-                                    ),
+                                    //   color: Color.fromARGB(255, 148, 138, 138),
+                                    //   fontWeight: FontWeight.normal,
+                                    //   fontSize: 20,
+                                    //   fontStyle: FontStyle.normal,
+                                    //   fontFamily: 'Poppins',
+                                      
+                                    // ),
+                                    foregroundColor: Color.fromARGB(255, 148, 138, 138),
+                                    backgroundColor: Color.fromARGB(255, 188, 231, 195),
+                                    shape:RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                    ), 
+                                  ),
+                                  onPressed: () => {
+                                    firstButton = true,
+                                    showLocationInput(context),
+                                  },
+                                  // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
+                                  icon: Icon(
+                                  
+                                    Icons.trip_origin,
+                                    color: Colors.indigo,
+                                    size: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                  label: Text(
+                                    textAlign: TextAlign.right,
+                                    _originInputController.text == "" ? 'Origin' : "${_originInputController.text}",
+                                    style: TextStyle (
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal,
+                                      color: _originInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.indigo,
+                                    )
                                   ),
                                 ),
                               ),
           
           
                               Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 1.0, 0, 2.0),
-                                  child: TextButton.icon(
+                                child: TextButton.icon(
+                                  
+                                  // TEXT BUTTON ICON FOR THE DESTINATION
+                                  style: TextButton.styleFrom(
+                                    alignment: Alignment.centerLeft,
+                                    //fixedSize: Size(500, 75),
+                                    fixedSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.width * 0.11
+                                    ),
                                     
-                                    // TEXT BUTTON ICON FOR THE DESTINATION
-                                    style: TextButton.styleFrom(
-                                      alignment: Alignment.centerLeft,
-                                      //fixedSize: Size(500, 75),
-                                      fixedSize: Size(
-                                        MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.width * 0.09
-                                      ),
+                                    // textStyle: TextStyle(
                                       
-                                      textStyle: TextStyle(
-                                        
-                                        textBaseline: TextBaseline.ideographic,
-                                        color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 20,
-                                        fontStyle: FontStyle.normal,
-                                        fontFamily: 'Poppins',
-                                        
-                                      ),
-                                      foregroundColor: Color.fromARGB(255, 148, 138, 138),
-                                      backgroundColor: Color.fromARGB(255, 188, 231, 195),
-                                      shape:RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(24.0),
-                                      ), 
-                                    ),
-                                    onPressed: () {
-                                      firstButton = false;
-                                      showLocationInput(context);
-                                    },
-                                    
-                                    // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
-                                    icon: Icon(
-                                      Icons.trip_origin,
-                                      size: MediaQuery.of(context).size.width * 0.05,
-                                      color: Colors.green,
-                                    ),
-                                    label: Text(
-
-                                      _destinationInputController.text == "" ? 'Destination' : "${_destinationInputController.text}",
-                                      style: TextStyle (
-                                        color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
-                                      )
-                                      ),
+                                    //   textBaseline: TextBaseline.ideographic,
+                                    //   color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
+                                    //   fontWeight: FontWeight.normal,
+                                    //   fontSize: 20,
+                                    //   fontStyle: FontStyle.normal,
+                                    //   fontFamily: 'Poppins',
+                                      
+                                    // ),
+                                    foregroundColor: Color.fromARGB(255, 148, 138, 138),
+                                    backgroundColor: Color.fromARGB(255, 188, 231, 195),
+                                    shape:RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                    ), 
                                   ),
+                                  onPressed: () {
+                                    firstButton = false;
+                                    showLocationInput(context);
+                                  },
+                                  
+                                  // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
+                                  icon: Icon(
+                                    Icons.trip_origin,
+                                    size: MediaQuery.of(context).size.width * 0.05,
+                                    color: Colors.green,
+                                  ),
+                                  label: Text(
+                                
+                                    _destinationInputController.text == "" ? 'Destination' : "${_destinationInputController.text}",
+                                    style: TextStyle (
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal,
+                                      color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
+                                    )
+                                    ),
                                 ),
                               ),
           
-                              (_originInputController.text == "" || _destinationInputController.text == "") ? Center() : Center(
-                                // FIND BUS BUTTON
-                                child: FilledButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => BusPage(
-                                          origin: _originInputController.text,
-                                          destination: _destinationInputController.text,
+                              (_originInputController.text == "" || _destinationInputController.text == "") ? Center() : Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Center(
+                                  // FIND BUS BUTTON
+                                  child: FilledButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => BusPage(
+                                            origin: _originInputController.text,
+                                            destination: _destinationInputController.text,
+                                          ),
                                         ),
+                                      );
+                                    },
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      fixedSize: Size(
+                                        MediaQuery.of(context).size.width * 0.5, MediaQuery.of(context).size.width * 0.14
                                       ),
-                                    );
-                                  },
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width * 0.5, MediaQuery.of(context).size.width * 0.13
-                                    ),
-                                 ),
-                                  child: Text('Find Bus',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24,
-                                      fontStyle: FontStyle.normal,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                  )
+                                   ),
+                                    child: Text('Find Bus',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24,
+                                        fontStyle: FontStyle.normal,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    )
+                                  ),
                                 ),
                               ),
                               // TextFormField(

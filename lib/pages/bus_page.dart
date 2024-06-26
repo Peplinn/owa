@@ -68,12 +68,22 @@ class _BusPageState extends State<BusPage> {
         title: const Text("Available Buses"),
         centerTitle: true,
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         itemCount: _buses.length,
+        separatorBuilder: (context, index) => const Divider(
+          indent: 20,
+          endIndent: 20,
+        ),
         itemBuilder: (context, index) {
           final bus = _buses[index];
           return ListTile(
-            title: Text(bus.name),
+            title: Text(
+              bus.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                )
+              ),
             subtitle: Text("Arriving at: ${bus.arrivalTime}"),
           );
         },
