@@ -21,6 +21,8 @@ bool firstButton = true;
 final _originInputController = TextEditingController();
 final _destinationInputController = TextEditingController();
 
+List<String> _filteredStations = [];
+
 
 
 // final List<LatLng> directions;
@@ -128,8 +130,6 @@ class _MapPageState extends State<MapPage> {
             //_currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
             //_cameraToPosition(_currentP!)
             getUserCurrentLocation().then((value) {
-              // print("My Current Location");
-              // print(value.latitude.toString() + " " + value.longitude.toString());
               _cameraToPosition(LatLng(value.latitude, value.longitude));
             })
           },
@@ -652,7 +652,7 @@ class LocationInputContainer extends StatefulWidget {
 
 class _LocationInputContainerState extends State<LocationInputContainer> {
   String _selectedLocation = ""; // Stores user-selected location
-  List<String> _filteredStations = [];
+  // List<String> _filteredStations = [];
   
   // Function to handle location selection (from Autocomplete or Done button)
   void onLocationSelected(String location) {
@@ -730,7 +730,19 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                             ),
 
                             suffixIcon: IconButton(
-                              onPressed: () => firstButton ? _originInputController.clear() : _destinationInputController.clear(),
+                              onPressed: () {
+                                if (firstButton) {
+                                  _originInputController.clear();
+                                  setState(() {
+                                    _filteredStations = brtStationsLagos;
+                                  });
+
+                                } else {
+                                  _destinationInputController.clear();
+                                  setState(() {
+                                    _filteredStations = brtStationsLagos;
+                                  });                                }
+                              },
                               icon: Icon(
                                 Icons.close_rounded,
                                 size : 20,
@@ -739,12 +751,10 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                             )
                           ),
                           onChanged: (String value) {
-                            
-                            final filteredStations = brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
-                            // Update ListView itemCount with filtered list length
                             setState(() {
-                              //value.isEmpty ? _filteredStations = brtStationsLagos :
-                              _filteredStations = filteredStations;
+                              _filteredStations = value.isEmpty
+                              ? brtStationsLagos
+                              : brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
                             });
                           },
                         ),
@@ -754,7 +764,6 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                 ],
               ),
 
-              //SizedBox(height: 16.0),
               // List of suggestions
               Expanded(
                 flex: 1,
@@ -764,7 +773,9 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      onTap: () => _onStationTap(_filteredStations[index]),
+                      onTap: () {
+                        _onStationTap(_filteredStations[index]);
+                      },
                       titleAlignment: ListTileTitleAlignment.titleHeight,
                       leading: const Icon(Icons.location_on),
                       title: Text(

@@ -21,6 +21,10 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
+# Test Pages
+lib/pages/map_page copy.dart
+lib/pages/map_page copy 2.dart
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
