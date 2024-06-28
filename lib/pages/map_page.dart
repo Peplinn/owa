@@ -14,9 +14,14 @@ import 'package:owa/consts.dart';
 import 'package:location/location.dart';
 import 'bus_page.dart';
 
+import 'package:owa/asset_data/bus_list.dart';
+import 'package:owa/asset_data/busstation_list.dart';
+
 bool firstButton = true; 
 final _originInputController = TextEditingController();
 final _destinationInputController = TextEditingController();
+
+
 
 // final List<LatLng> directions;
 // final List<AddressSuggestion> searchResultsLocation;
@@ -647,6 +652,7 @@ class LocationInputContainer extends StatefulWidget {
 
 class _LocationInputContainerState extends State<LocationInputContainer> {
   String _selectedLocation = ""; // Stores user-selected location
+  List<String> _filteredStations = [];
   
   // Function to handle location selection (from Autocomplete or Done button)
   void onLocationSelected(String location) {
@@ -700,48 +706,11 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
               Divider(height: 32.0),
               Row(
                 children: [
-                  // Column(
-                  //   children: [
-                  //     // Container(
-                  //     //   height: 8.0,
-                  //     //   width: 8.0,
-                  //     //   margin: const EdgeInsets.all(2.0),
-                  //     //   decoration: BoxDecoration(
-                  //     //     //color: colorScheme.primary,
-                  //     //     shape: BoxShape.circle,
-                  //     //   ),
-                  //     // ),
-                  //     // Container(
-                  //     //   height: 40.0,
-                  //     //   width: 2.0,
-                  //     //   decoration: BoxDecoration(
-                  //     //     //color: colorScheme.primary,
-                  //     //   ),
-                  //     // ),
-                  //     // Container(
-                  //     //   height: 8.0,
-                  //     //   width: 8.0,
-                  //     //   margin: const EdgeInsets.all(2.0),
-                  //     //   decoration: BoxDecoration(//color: colorScheme.primary
-                  //     //   ),
-                  //     // ),
-                  //   ],
-                  // ),
                   Expanded(
                     flex: 1,
                     child: Column(
                       children: [
-                        // TextFormField(
-                        //   readOnly: true,
-                        //   //controller: pickUpAddressController,
-                        //   decoration: const InputDecoration(
-                        //     isDense: true,
-                        //     prefixIcon: Icon(Icons.trip_origin,
-                        //       //size: MediaQuery.of(context).size.width * 0.05,
-                        //       color: Colors.indigo,
-                        //     ),
-                        //   ),
-                        // ),
+                        
                         TextFormField(
                           textCapitalization: TextCapitalization.words,
                           textAlignVertical: TextAlignVertical.center,
@@ -753,12 +722,10 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                           controller: firstButton ? _originInputController : _destinationInputController,
                           decoration: InputDecoration(
                             isDense: true,
-                            hintText: "Select Location",
-                            // hintText: firstButton ? "Select Origin" : "Select Destination",
+                            hintText: "Select Station",
                             prefixIcon: Icon(
                               Icons.trip_origin,
                               size: 20,
-                              //size: MediaQuery.of(context).size.width * 0.05,
                               color: firstButton ? Colors.indigo : Colors.green,
                             ),
 
@@ -772,11 +739,13 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                             )
                           ),
                           onChanged: (String value) {
-                            // TODO: DEBOUNCE
-
-                            // context.read<RideBookingBloc>().add(
-                            //       SearchDropOffAddressEvent(query: value),
-                            //     );
+                            
+                            final filteredStations = brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
+                            // Update ListView itemCount with filtered list length
+                            setState(() {
+                              //value.isEmpty ? _filteredStations = brtStationsLagos :
+                              _filteredStations = filteredStations;
+                            });
                           },
                         ),
                       ],
@@ -790,34 +759,28 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
               Expanded(
                 flex: 1,
                 child: ListView.builder(
-                  itemCount: 4, //state.searchResultsForDropOff.length,
+                  itemCount: _filteredStations.length, //state.searchResultsForDropOff.length,
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      onTap: () {
-                        // context.read<RideBookingBloc>().add(
-                        //       SelectDropOffSuggestionEvent(
-                        //         addressSuggestion:
-                        //             state.searchResultsForDropOff[index],
-                        //       ),
-                        //     );
-                      },
+                      onTap: () => _onStationTap(_filteredStations[index]),
+                      titleAlignment: ListTileTitleAlignment.titleHeight,
                       leading: const Icon(Icons.location_on),
-                      // title: Text(
-                      //   //state.searchResultsForDropOff[index].text,
-                      //   style: TextStyle(
-                      //     fontWeight: FontWeight.normal,
-                      //     fontSize: 15,
-                      //   ),
-                      // ),
+                      title: Text(
+                        _filteredStations[index],
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 18,
+                        ),
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             height: 1,
                             margin: const EdgeInsets.only(top: 8.0),
-                            //color: colorScheme.surfaceVariant,
                           ),
                         ],
                       ),
@@ -878,6 +841,15 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
     );
 
     
+  }
+
+  void _onStationTap(String selectedStation) {
+    // Update the TextEditingController text with the selected station
+    if (firstButton) {
+      _originInputController.text = selectedStation;
+    } else {
+      _destinationInputController.text = selectedStation;
+    }
   }
 
   void updateTextButton(BuildContext context, String location) {
