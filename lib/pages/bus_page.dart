@@ -41,22 +41,22 @@ class _BusPageState extends State<BusPage> {
     // Replace this with your actual API call and data parsing logic
     setState(() {
       _buses = [
-        Bus(name: "Bus 123", arrivalTime: "10:15 AM"),
-        Bus(name: "Bus 456", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 23", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 235", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 6346", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 28", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 72", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 28", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 86", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 62", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 48", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 29", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 542", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 82", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 72", arrivalTime: "10:30 AM"),
-        Bus(name: "Bus 63", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 123", arrivalTime: "10:15 AM"),
+        Bus(busName: "Bus 456", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 23", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 235", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 6346", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 28", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 72", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 28", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 86", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 62", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 48", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 29", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 542", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 82", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 72", arrivalTime: "10:30 AM"),
+        Bus(busName: "Bus 63", arrivalTime: "10:30 AM"),
       ];
     });
   }
@@ -80,7 +80,7 @@ class _BusPageState extends State<BusPage> {
               final bus = _buses[index];
               return ListTile(
                 title: Text(
-                  bus.name,
+                  bus.busName,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -98,8 +98,9 @@ class _BusPageState extends State<BusPage> {
 }
 
 class Bus {
-  final String name;
+  final String busName;
   final String arrivalTime;
+  //final latLng busLocation
 
-  Bus({required this.name, required this.arrivalTime});
+  Bus({required this.busName, required this.arrivalTime});
 }

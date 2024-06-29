@@ -218,7 +218,7 @@ class _MapPageState extends State<MapPage> {
                               Center(
                                 child: TextButton.icon(
                                   
-                                  // TEXT BUTTON ICON FOR THE CURRENT LOCATION
+                                  // TEXT BUTTON ICON FOR THE ORIGIN
                                   style: TextButton.styleFrom(
                                     alignment: Alignment.centerLeft,
                                     //alignment: Alignment(MediaQuery.of(context).size.width * 0.0001, MediaQuery.of(context).size.width * 0.05),
@@ -244,6 +244,11 @@ class _MapPageState extends State<MapPage> {
                                   ),
                                   onPressed: () => {
                                     firstButton = true,
+                                    setState(() {
+                                      if (_filteredStations.isEmpty){
+                                        _filteredStations = brtStationsLagos;
+                                      }
+                                    }),
                                     showLocationInput(context),
                                   },
                                   // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
@@ -295,6 +300,11 @@ class _MapPageState extends State<MapPage> {
                                   ),
                                   onPressed: () {
                                     firstButton = false;
+                                    setState(() {
+                                      if (_filteredStations.isEmpty){
+                                        _filteredStations = brtStationsLagos;
+                                      }
+                                    });
                                     showLocationInput(context);
                                   },
                                   
@@ -734,14 +744,17 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                                 if (firstButton) {
                                   _originInputController.clear();
                                   setState(() {
+                                    //_filteredStations = brtStationsLatLng.keys.toList();
                                     _filteredStations = brtStationsLagos;
                                   });
 
                                 } else {
                                   _destinationInputController.clear();
                                   setState(() {
+                                    // _filteredStations = brtStationsLatLng.keys.toList();
                                     _filteredStations = brtStationsLagos;
-                                  });                                }
+                                  });                                
+                                }
                               },
                               icon: Icon(
                                 Icons.close_rounded,
@@ -753,6 +766,8 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                           onChanged: (String value) {
                             setState(() {
                               _filteredStations = value.isEmpty
+                              //? brtStationsLatLng.keys.toList()
+                              //: brtStationsLatLng.keys.toList().where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
                               ? brtStationsLagos
                               : brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
                             });
@@ -786,15 +801,15 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                           fontSize: 18,
                         ),
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 1,
-                            margin: const EdgeInsets.only(top: 8.0),
-                          ),
-                        ],
-                      ),
+                      // subtitle: Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Container(
+                      //       height: 1,
+                      //       margin: const EdgeInsets.only(top: 8.0),
+                      //     ),
+                      //   ],
+                      // ),
                     );
                   },
                 ),
