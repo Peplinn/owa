@@ -9,10 +9,11 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:owa/consts.dart';
+import 'package:owa/.env.dart';
 //import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'bus_page.dart';
+import 'dio_directions.dart';
 
 import 'package:owa/asset_data/bus_list.dart';
 import 'package:owa/asset_data/busstation_list.dart';
@@ -21,10 +22,21 @@ bool firstButton = true;
 final _originInputController = TextEditingController();
 final _destinationInputController = TextEditingController();
 
+LatLng stationLatLng = brtStationsLatLng[_originInputController.text]!;
+
 List<String> _filteredStations = [];
+List<double> _filteredCoordinates = [];
+
+Marker _origin = Marker(markerId: MarkerId("unsetOrigin"));
+Marker _destination = Marker(markerId: MarkerId("unsetDestination"));
+
+LatLng? _originCoordinates = null;
+LatLng? _destinationCoordinates = null;
+Directions? _info = null;
 
 
-
+final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
 // final List<LatLng> directions;
 // final List<AddressSuggestion> searchResultsLocation;
 
@@ -51,8 +63,8 @@ class _MapPageState extends State<MapPage> {
 
   
 
-  final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
+  // final Completer<GoogleMapController> _mapController =
+  //     Completer<GoogleMapController>();
 
   static const LatLng _pGooglePlex = LatLng(37.4223, -122.0848);
   static const LatLng _pApplePark = LatLng(37.3346, -122.0090);
@@ -102,12 +114,16 @@ class _MapPageState extends State<MapPage> {
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
               zoomControlsEnabled: false,
+              // markers: {
+              //   Marker(
+              //     markerId: MarkerId("_currentLocation"),
+              //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+              //     position: _currentP!,
+              //   ),
+              // },
               markers: {
-                Marker(
-                  markerId: MarkerId("_currentLocation"),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-                  position: _currentP!,
-                ),
+                _origin,
+                _destination
               },
               polylines: Set<Polyline>.of(polylines.values),
             ),
@@ -246,7 +262,7 @@ class _MapPageState extends State<MapPage> {
                                     firstButton = true,
                                     setState(() {
                                       if (_filteredStations.isEmpty){
-                                        _filteredStations = brtStationsLagos;
+                                        _filteredStations = brtStationsLatLng.keys.toList();
                                       }
                                     }),
                                     showLocationInput(context),
@@ -302,7 +318,7 @@ class _MapPageState extends State<MapPage> {
                                     firstButton = false;
                                     setState(() {
                                       if (_filteredStations.isEmpty){
-                                        _filteredStations = brtStationsLagos;
+                                        _filteredStations = brtStationsLatLng.keys.toList();
                                       }
                                     });
                                     showLocationInput(context);
@@ -558,16 +574,16 @@ class _MapPageState extends State<MapPage> {
   // }
   
 
-  Future<void> _cameraToPosition(LatLng pos) async {
-    final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
-      target: pos,
-      zoom: 17,
-    );
-    await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
-    );
-  }
+  // Future<void> _cameraToPosition(LatLng pos) async {
+  //   final GoogleMapController controller = await _mapController.future;
+  //   CameraPosition _newCameraPosition = CameraPosition(
+  //     target: pos,
+  //     zoom: 17,
+  //   );
+  //   await controller.animateCamera(
+  //     CameraUpdate.newCameraPosition(_newCameraPosition),
+  //   );
+  // }
 
   Future<Position> getUserCurrentLocation() async {
 
@@ -651,6 +667,17 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+}
+
+Future<void> _cameraToPosition(LatLng pos) async {
+  final GoogleMapController controller = await _mapController.future;
+  CameraPosition _newCameraPosition = CameraPosition(
+    target: pos,
+    zoom: 17,
+  );
+  await controller.animateCamera(
+    CameraUpdate.newCameraPosition(_newCameraPosition),
+  );
 }
 
 
@@ -744,15 +771,15 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                                 if (firstButton) {
                                   _originInputController.clear();
                                   setState(() {
-                                    //_filteredStations = brtStationsLatLng.keys.toList();
-                                    _filteredStations = brtStationsLagos;
+                                    _filteredStations = brtStationsLatLng.keys.toList();
+                                    //_filteredStations = brtStationsLagos;
                                   });
 
                                 } else {
                                   _destinationInputController.clear();
                                   setState(() {
-                                    // _filteredStations = brtStationsLatLng.keys.toList();
-                                    _filteredStations = brtStationsLagos;
+                                    _filteredStations = brtStationsLatLng.keys.toList();
+                                    // _filteredStations = brtStationsLagos;
                                   });                                
                                 }
                               },
@@ -766,10 +793,10 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                           onChanged: (String value) {
                             setState(() {
                               _filteredStations = value.isEmpty
-                              //? brtStationsLatLng.keys.toList()
-                              //: brtStationsLatLng.keys.toList().where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
-                              ? brtStationsLagos
-                              : brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
+                              ? brtStationsLatLng.keys.toList()
+                              : brtStationsLatLng.keys.toList().where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
+                              // ? brtStationsLagos
+                              // : brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
                             });
                           },
                         ),
@@ -790,6 +817,14 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                     return ListTile(
                       onTap: () {
                         _onStationTap(_filteredStations[index]);
+                        if (!firstButton){
+                          // brtStationsLatLng(_originInputController.text)
+                          stationLatLng = brtStationsLatLng[_destinationInputController.text]!;
+                          // _cameraToPosition(stationLatLng);
+                        } else {
+                          stationLatLng = brtStationsLatLng[_originInputController.text]!;
+                        }
+                        _cameraToPosition(stationLatLng);
                       },
                       titleAlignment: ListTileTitleAlignment.titleHeight,
                       leading: const Icon(Icons.location_on),
@@ -845,7 +880,16 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => onLocationSelected(_selectedLocation),
+                    onPressed: () => {
+                    onLocationSelected(_selectedLocation),
+                    // if (!firstButton){
+                    //   // brtStationsLatLng(_originInputController.text)
+                    //   stationLatLng = brtStationsLatLng[_destinationInputController.text]!,
+                    //   _cameraToPosition(stationLatLng),
+                    // },
+                    
+                    _addMarker(stationLatLng)
+                    },
                     child: Text('Done',
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
@@ -889,6 +933,48 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
         //   style: TextStyle(fontWeight: FontWeight.bold),
         // );
       });
+    }
+  }
+
+  void _addMarker(LatLng pos) async {
+    
+    // if (_origin.markerId.toString() == "MarkerId(unsetOrigin)" || 
+    // (_origin.markerId.toString() != "MarkerId(unsetOrigin)" && _destination.markerId.toString() != "MarkerId(unsetDestination)")) {
+    if (firstButton) {
+      // Origin is not set OR Origin & Destination are both set
+      // Set origin
+      // print("Origin time!");
+      setState(() {
+        _origin = Marker(
+          markerId: const MarkerId('origin'),
+          infoWindow: const InfoWindow(title: 'Origin'),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+          position: pos,
+        );
+        // Reset destination
+        //_destination = Marker(markerId: MarkerId("unsetDestination"));
+
+        // Reset info
+        _info = null;
+      });
+    } else {
+      // print("Destination time!");
+      // Origin is already set
+      // Set destination
+      setState(() {
+        _destination = Marker(
+          markerId: const MarkerId('destination'),
+          infoWindow: const InfoWindow(title: 'Destination'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          position: pos,
+        );
+      });
+
+      // Get directions
+      final directions = await DirectionsRepository()
+          .getDirections(origin: _origin.position, destination: pos);
+      setState(() => _info = directions);
     }
   }
 }

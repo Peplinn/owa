@@ -24,6 +24,8 @@ migrate_working_dir/
 # Test Pages
 lib/pages/map_page copy.dart
 lib/pages/map_page copy 2.dart
+.env.dart
+lib/consts.dart
 
 # Flutter/Dart/Pub related
 **/doc/api/
