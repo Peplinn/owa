@@ -13,12 +13,12 @@ import 'package:owa/.env.dart';
 //import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'bus_page.dart';
-import 'dio_directions.dart';
+// import '../testingp/dio_directions.dart';
 
 import 'package:owa/asset_data/bus_list.dart';
 import 'package:owa/asset_data/busstation_list.dart';
 
-bool firstButton = true; 
+bool firstButton = true;
 final _originInputController = TextEditingController();
 final _destinationInputController = TextEditingController();
 
@@ -32,11 +32,10 @@ Marker _destination = Marker(markerId: MarkerId("unsetDestination"));
 
 LatLng? _originCoordinates = null;
 LatLng? _destinationCoordinates = null;
-Directions? _info = null;
-
+// Directions? _info = null;
 
 final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
+    Completer<GoogleMapController>();
 // final List<LatLng> directions;
 // final List<AddressSuggestion> searchResultsLocation;
 
@@ -61,8 +60,6 @@ class _MapPageState extends State<MapPage> {
     zoom: 13,
   );
 
-  
-
   // final Completer<GoogleMapController> _mapController =
   //     Completer<GoogleMapController>();
 
@@ -86,7 +83,7 @@ class _MapPageState extends State<MapPage> {
       },
     );
   }
-  
+
   // controller.text =
   //           '${state.pickUpAddress?.city ?? ''} ${state.pickUpAddress?.street ?? ''}';
 
@@ -103,30 +100,34 @@ class _MapPageState extends State<MapPage> {
       body: Stack(
         children: [
           _currentP == null
-          ? const Center(
-              child: Text("Loading..."),
-            )
-          : GoogleMap(
-              onMapCreated: ((GoogleMapController controller) =>
-                  _mapController.complete(controller)),
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:3773060372.
-              initialCameraPosition: _initialCameraPosition,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: false,
-              // markers: {
-              //   Marker(
-              //     markerId: MarkerId("_currentLocation"),
-              //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-              //     position: _currentP!,
-              //   ),
-              // },
-              markers: {
-                _origin,
-                _destination
-              },
-              polylines: Set<Polyline>.of(polylines.values),
-            ),
+              ? const Center(
+                  child: Text("Loading..."),
+                )
+              : GoogleMap(
+                  onMapCreated: ((GoogleMapController controller) =>
+                      _mapController.complete(controller)),
+                  initialCameraPosition: _initialCameraPosition,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
+                  // markers: {
+                  //   Marker(
+                  //     markerId: MarkerId("_currentLocation"),
+                  //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+                  //     position: _currentP!,
+                  //   ),
+                  // },
+                  markers: {
+                      _origin,
+                      _destination
+                    },
+                  polylines: {
+                      // if (_info != null){
+                      //   Polyline(polylineId: const PolylineId('User Estimated route')),
+                      //   color: Colors.gradient
+                      // }
+                    } //Set<Polyline>.of(polylines.values),
+                  ),
           //buildBottomSheet(),
           buildFindBusTile(),
           // We are also going to be adding the side menu icon and map orient widgets here
@@ -134,7 +135,7 @@ class _MapPageState extends State<MapPage> {
           // I might never implement it
         ],
       ),
-      floatingActionButton: Container(        
+      floatingActionButton: Container(
         alignment: AlignmentDirectional.centerEnd,
         child: FloatingActionButton(
           shape: CircleBorder(),
@@ -149,12 +150,9 @@ class _MapPageState extends State<MapPage> {
               _cameraToPosition(LatLng(value.latitude, value.longitude));
             })
           },
-          
-
-          
           child: const Icon(Icons.my_location_rounded),
         ),
-      ), 
+      ),
     );
   }
 
@@ -169,248 +167,257 @@ class _MapPageState extends State<MapPage> {
               elevation: 50,
               shadowColor: Colors.black,
               color: Colors.white,
-              
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
               child: Container(
                 constraints: BoxConstraints.tightForFinite(
-                    width: MediaQuery.of(context).size.width,
-                    // height: MediaQuery.of(context).size.width * 0.5,
-                  ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                decoration: BoxDecoration( ),
-                child: SizedBox (
+                  width: MediaQuery.of(context).size.width,
+                  // height: MediaQuery.of(context).size.width * 0.5,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                decoration: BoxDecoration(),
+                child: SizedBox(
                   height: MediaQuery.of(context).size.width * 0.65,
                   child: Row(
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      //mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                  const TextSpan(
-                                      text: 'Where are you going, ',
-                                      style: TextStyle(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(children: [
+                                const TextSpan(
+                                    text: 'Where are you going, ',
+                                    style: TextStyle(
                                         color: Colors.black,
                                         fontStyle: FontStyle.normal,
                                         fontFamily: 'Poppins',
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 28)
-                                  ),
-                                  TextSpan(
-                                      text: 'Egbon',
-                                      style: const TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 30,
-                                          fontStyle: FontStyle.normal,
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.bold
-                                        )
-                                  ),
-                                  TextSpan(
-                                      text: '?',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 28,
-                                          fontStyle: FontStyle.normal,
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.bold
-                                        )
-                                  ),
-                                ]),
-          
-                                
-                              ),
-                              
-          
-                              Center(
-                                child: TextButton.icon(
-                                  
-                                  // TEXT BUTTON ICON FOR THE ORIGIN
-                                  style: TextButton.styleFrom(
-                                    alignment: Alignment.centerLeft,
-                                    //alignment: Alignment(MediaQuery.of(context).size.width * 0.0001, MediaQuery.of(context).size.width * 0.05),
-                                    //fixedSize: Size(500, 75),
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.width * 0.11
-                                    ),
-                                    
-                                    // textStyle: TextStyle(
-                                      
-                                    //   color: Color.fromARGB(255, 148, 138, 138),
-                                    //   fontWeight: FontWeight.normal,
-                                    //   fontSize: 20,
-                                    //   fontStyle: FontStyle.normal,
-                                    //   fontFamily: 'Poppins',
-                                      
-                                    // ),
-                                    foregroundColor: Color.fromARGB(255, 148, 138, 138),
-                                    backgroundColor: Color.fromARGB(255, 188, 231, 195),
-                                    shape:RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24.0),
-                                    ), 
-                                  ),
-                                  onPressed: () => {
-                                    firstButton = true,
-                                    setState(() {
-                                      if (_filteredStations.isEmpty){
-                                        _filteredStations = brtStationsLatLng.keys.toList();
-                                      }
-                                    }),
-                                    showLocationInput(context),
-                                  },
-                                  // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
-                                  icon: Icon(
-                                  
-                                    Icons.trip_origin,
-                                    color: Colors.indigo,
-                                    size: MediaQuery.of(context).size.width * 0.05,
-                                  ),
-                                  label: Text(
-                                    textAlign: TextAlign.right,
-                                    _originInputController.text == "" ? 'Origin' : "${_originInputController.text}",
-                                    style: TextStyle (
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.normal,
-                                      color: _originInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.indigo,
-                                    )
-                                  ),
-                                ),
-                              ),
-          
-          
-                              Center(
-                                child: TextButton.icon(
-                                  
-                                  // TEXT BUTTON ICON FOR THE DESTINATION
-                                  style: TextButton.styleFrom(
-                                    alignment: Alignment.centerLeft,
-                                    //fixedSize: Size(500, 75),
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.width * 0.11
-                                    ),
-                                    
-                                    // textStyle: TextStyle(
-                                      
-                                    //   textBaseline: TextBaseline.ideographic,
-                                    //   color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
-                                    //   fontWeight: FontWeight.normal,
-                                    //   fontSize: 20,
-                                    //   fontStyle: FontStyle.normal,
-                                    //   fontFamily: 'Poppins',
-                                      
-                                    // ),
-                                    foregroundColor: Color.fromARGB(255, 148, 138, 138),
-                                    backgroundColor: Color.fromARGB(255, 188, 231, 195),
-                                    shape:RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24.0),
-                                    ), 
-                                  ),
-                                  onPressed: () {
-                                    firstButton = false;
-                                    setState(() {
-                                      if (_filteredStations.isEmpty){
-                                        _filteredStations = brtStationsLatLng.keys.toList();
-                                      }
-                                    });
-                                    showLocationInput(context);
-                                  },
-                                  
-                                  // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
-                                  icon: Icon(
-                                    Icons.trip_origin,
-                                    size: MediaQuery.of(context).size.width * 0.05,
-                                    color: Colors.green,
-                                  ),
-                                  label: Text(
-                                
-                                    _destinationInputController.text == "" ? 'Destination' : "${_destinationInputController.text}",
-                                    style: TextStyle (
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.normal,
-                                      color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
-                                    )
-                                    ),
-                                ),
-                              ),
-          
-                              (_originInputController.text == "" || _destinationInputController.text == "") ? Center() : Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Center(
-                                  // FIND BUS BUTTON
-                                  child: FilledButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => BusPage(
-                                            origin: _originInputController.text,
-                                            destination: _destinationInputController.text,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    style: FilledButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                      fixedSize: Size(
-                                        MediaQuery.of(context).size.width * 0.5, MediaQuery.of(context).size.width * 0.14
-                                      ),
-                                   ),
-                                    child: Text('Find Bus',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24,
+                                        fontSize: 28)),
+                                TextSpan(
+                                    text: 'Ebube',
+                                    style: const TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 30,
                                         fontStyle: FontStyle.normal,
                                         fontFamily: 'Poppins',
-                                      ),
-                                    )
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text: '?',
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 28,
+                                        fontStyle: FontStyle.normal,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold)),
+                              ]),
+                            ),
+
+                            Center(
+                              child: TextButton.icon(
+                                // TEXT BUTTON ICON FOR THE ORIGIN
+                                style: TextButton.styleFrom(
+                                  alignment: Alignment.centerLeft,
+                                  //alignment: Alignment(MediaQuery.of(context).size.width * 0.0001, MediaQuery.of(context).size.width * 0.05),
+                                  //fixedSize: Size(500, 75),
+                                  fixedSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8,
+                                      MediaQuery.of(context).size.width * 0.11),
+
+                                  // textStyle: TextStyle(
+
+                                  //   color: Color.fromARGB(255, 148, 138, 138),
+                                  //   fontWeight: FontWeight.normal,
+                                  //   fontSize: 20,
+                                  //   fontStyle: FontStyle.normal,
+                                  //   fontFamily: 'Poppins',
+
+                                  // ),
+                                  foregroundColor:
+                                      Color.fromARGB(255, 148, 138, 138),
+                                  backgroundColor:
+                                      Color.fromARGB(255, 188, 231, 195),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
                                   ),
                                 ),
+                                onPressed: () => {
+                                  firstButton = true,
+                                  setState(() {
+                                    if (_filteredStations.isEmpty) {
+                                      _filteredStations =
+                                          brtStationsLatLng.keys.toList();
+                                    }
+                                  }),
+                                  showLocationInput(context),
+                                },
+                                // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
+                                icon: Icon(
+                                  Icons.trip_origin,
+                                  color: Colors.indigo,
+                                  size:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                label: Text(
+                                    textAlign: TextAlign.right,
+                                    _originInputController.text == ""
+                                        ? 'Origin'
+                                        : "${_originInputController.text}",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal,
+                                      color: _originInputController.text == ""
+                                          ? Color.fromARGB(255, 148, 138, 138)
+                                          : Colors.indigo,
+                                    )),
                               ),
-                              // TextFormField(
-                              //   readOnly: true,
-                              //   controller: controller,
-                              //   decoration: InputDecoration(
-                              //     border: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(24),
-                              //       borderSide: BorderSide.none,
-                              //     ),
-                              //     filled: true, // Fill the background
-                              //     fillColor: Color.fromARGB(255, 234, 215, 215),
-                              //     //labelText: 'Destination',
-                              //     hintText: 'Destination',
-                              //     hintStyle: TextStyle(
-                              //       fontWeight: FontWeight.normal,
-                              //       fontSize: 20,
-                              //       fontStyle: FontStyle.normal,
-                              //       fontFamily: 'Poppins',
-                              //     ),
-                              //     prefixIcon: const Icon(
-                              //       Icons.trip_origin,
-                              //       color: Colors.green,
-                              //     ),
-                              //   ),
-                              // ),
-                              
-                            ],
-                          ),
+                            ),
+
+                            Center(
+                              child: TextButton.icon(
+                                // TEXT BUTTON ICON FOR THE DESTINATION
+                                style: TextButton.styleFrom(
+                                  alignment: Alignment.centerLeft,
+                                  //fixedSize: Size(500, 75),
+                                  fixedSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8,
+                                      MediaQuery.of(context).size.width * 0.11),
+
+                                  // textStyle: TextStyle(
+
+                                  //   textBaseline: TextBaseline.ideographic,
+                                  //   color: _destinationInputController.text == "" ? Color.fromARGB(255, 148, 138, 138) : Colors.green,
+                                  //   fontWeight: FontWeight.normal,
+                                  //   fontSize: 20,
+                                  //   fontStyle: FontStyle.normal,
+                                  //   fontFamily: 'Poppins',
+
+                                  // ),
+                                  foregroundColor:
+                                      Color.fromARGB(255, 148, 138, 138),
+                                  backgroundColor:
+                                      Color.fromARGB(255, 188, 231, 195),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  firstButton = false;
+                                  setState(() {
+                                    if (_filteredStations.isEmpty) {
+                                      _filteredStations =
+                                          brtStationsLatLng.keys.toList();
+                                    }
+                                  });
+                                  showLocationInput(context);
+                                },
+
+                                // ADD THAT ON LONG PRESS, THE CAMERA CENTERS ON THE LOCATION
+                                icon: Icon(
+                                  Icons.trip_origin,
+                                  size:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                  color: Colors.green,
+                                ),
+                                label: Text(
+                                    _destinationInputController.text == ""
+                                        ? 'Destination'
+                                        : "${_destinationInputController.text}",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal,
+                                      color: _destinationInputController.text ==
+                                              ""
+                                          ? Color.fromARGB(255, 148, 138, 138)
+                                          : Colors.green,
+                                    )),
+                              ),
+                            ),
+
+                            (_originInputController.text == "" ||
+                                    _destinationInputController.text == "")
+                                ? Center()
+                                : Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Center(
+                                      // FIND BUS BUTTON
+                                      child: FilledButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => BusPage(
+                                                  origin: _originInputController
+                                                      .text,
+                                                  destination:
+                                                      _destinationInputController
+                                                          .text,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          style: FilledButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                            fixedSize: Size(
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.5,
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.14),
+                                          ),
+                                          child: Text(
+                                            'Find Bus',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24,
+                                              fontStyle: FontStyle.normal,
+                                              fontFamily: 'Poppins',
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                            // TextFormField(
+                            //   readOnly: true,
+                            //   controller: controller,
+                            //   decoration: InputDecoration(
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(24),
+                            //       borderSide: BorderSide.none,
+                            //     ),
+                            //     filled: true, // Fill the background
+                            //     fillColor: Color.fromARGB(255, 234, 215, 215),
+                            //     //labelText: 'Destination',
+                            //     hintText: 'Destination',
+                            //     hintStyle: TextStyle(
+                            //       fontWeight: FontWeight.normal,
+                            //       fontSize: 20,
+                            //       fontStyle: FontStyle.normal,
+                            //       fontFamily: 'Poppins',
+                            //     ),
+                            //     prefixIcon: const Icon(
+                            //       Icons.trip_origin,
+                            //       color: Colors.green,
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
                         ),
-                    
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          
         ],
       ),
     );
@@ -441,138 +448,137 @@ class _MapPageState extends State<MapPage> {
   //             ],
   //           )
   //         ),
-          // child: SafeArea(
-          //   top: false,
-          //   child: Column(
-          //     children: [
-          //       Text(
-          //         'Set your destination',
-          //         style: textTheme.titleLarge!.copyWith(
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //       ),
-          //       const SizedBox(height: 4.0),
-          //       Text(
-          //         'Type and pick from the suggestions',
-          //         style: textTheme.bodyLarge,
-          //       ),
-          //       Divider(height: 32.0),
-          //       Row(
-          //         children: [
-          //           Column(
-          //             children: [
-          //               Container(
-          //                 height: 8.0,
-          //                 width: 8.0,
-          //                 margin: const EdgeInsets.all(2.0),
-          //                 decoration: BoxDecoration(
-          //                   color: colorScheme.primary,
-          //                   shape: BoxShape.circle,
-          //                 ),
-          //               ),
-          //               Container(
-          //                 height: 40.0,
-          //                 width: 2.0,
-          //                 decoration: BoxDecoration(
-          //                   color: colorScheme.primary,
-          //                 ),
-          //               ),
-          //               Container(
-          //                 height: 8.0,
-          //                 width: 8.0,
-          //                 margin: const EdgeInsets.all(2.0),
-          //                 decoration: BoxDecoration(color: colorScheme.primary),
-          //               ),
-          //             ],
-          //           ),
-          //           Expanded(
-          //             child: Column(
-          //               children: [
-          //                 TextFormField(
-          //                   readOnly: true,
-          //                   controller: pickUpAddressController,
-          //                   decoration: const InputDecoration(
-          //                     isDense: true,
-          //                     prefixIcon: Icon(Icons.search),
-          //                   ),
-          //                 ),
-          //                 TextFormField(
-          //                   controller: dropOffAddressController,
-          //                   decoration: const InputDecoration(
-          //                     isDense: true,
-          //                     hintText: 'Where to?',
-          //                     prefixIcon: Icon(Icons.search),
-          //                   ),
-          //                   onChanged: (String value) {
-          //                     // TODO: DEBOUNCE
+  // child: SafeArea(
+  //   top: false,
+  //   child: Column(
+  //     children: [
+  //       Text(
+  //         'Set your destination',
+  //         style: textTheme.titleLarge!.copyWith(
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 4.0),
+  //       Text(
+  //         'Type and pick from the suggestions',
+  //         style: textTheme.bodyLarge,
+  //       ),
+  //       Divider(height: 32.0),
+  //       Row(
+  //         children: [
+  //           Column(
+  //             children: [
+  //               Container(
+  //                 height: 8.0,
+  //                 width: 8.0,
+  //                 margin: const EdgeInsets.all(2.0),
+  //                 decoration: BoxDecoration(
+  //                   color: colorScheme.primary,
+  //                   shape: BoxShape.circle,
+  //                 ),
+  //               ),
+  //               Container(
+  //                 height: 40.0,
+  //                 width: 2.0,
+  //                 decoration: BoxDecoration(
+  //                   color: colorScheme.primary,
+  //                 ),
+  //               ),
+  //               Container(
+  //                 height: 8.0,
+  //                 width: 8.0,
+  //                 margin: const EdgeInsets.all(2.0),
+  //                 decoration: BoxDecoration(color: colorScheme.primary),
+  //               ),
+  //             ],
+  //           ),
+  //           Expanded(
+  //             child: Column(
+  //               children: [
+  //                 TextFormField(
+  //                   readOnly: true,
+  //                   controller: pickUpAddressController,
+  //                   decoration: const InputDecoration(
+  //                     isDense: true,
+  //                     prefixIcon: Icon(Icons.search),
+  //                   ),
+  //                 ),
+  //                 TextFormField(
+  //                   controller: dropOffAddressController,
+  //                   decoration: const InputDecoration(
+  //                     isDense: true,
+  //                     hintText: 'Where to?',
+  //                     prefixIcon: Icon(Icons.search),
+  //                   ),
+  //                   onChanged: (String value) {
+  //                     // TODO: DEBOUNCE
 
-          //                     context.read<RideBookingBloc>().add(
-          //                           SearchDropOffAddressEvent(query: value),
-          //                         );
-          //                   },
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //       SizedBox(height: 16.0),
-          //       // List of suggestions
-          //       Expanded(
-          //         child: ListView.builder(
-          //           itemCount: state.searchResultsForDropOff.length,
-          //           shrinkWrap: true,
-          //           padding: EdgeInsets.zero,
-          //           itemBuilder: (context, index) {
-          //             return ListTile(
-          //               onTap: () {
-          //                 context.read<RideBookingBloc>().add(
-          //                       SelectDropOffSuggestionEvent(
-          //                         addressSuggestion:
-          //                             state.searchResultsForDropOff[index],
-          //                       ),
-          //                     );
-          //               },
-          //               leading: const Icon(Icons.location_on),
-          //               title: Text(
-          //                 state.searchResultsForDropOff[index].text,
-          //                 style: textTheme.bodyLarge!.copyWith(
-          //                   fontWeight: FontWeight.bold,
-          //                 ),
-          //               ),
-          //               subtitle: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   Container(
-          //                     height: 1,
-          //                     margin: const EdgeInsets.only(top: 8.0),
-          //                     color: colorScheme.surfaceVariant,
-          //                   ),
-          //                 ],
-          //               ),
-          //             );
-          //           },
-          //         ),
-          //       ),
+  //                     context.read<RideBookingBloc>().add(
+  //                           SearchDropOffAddressEvent(query: value),
+  //                         );
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(height: 16.0),
+  //       // List of suggestions
+  //       Expanded(
+  //         child: ListView.builder(
+  //           itemCount: state.searchResultsForDropOff.length,
+  //           shrinkWrap: true,
+  //           padding: EdgeInsets.zero,
+  //           itemBuilder: (context, index) {
+  //             return ListTile(
+  //               onTap: () {
+  //                 context.read<RideBookingBloc>().add(
+  //                       SelectDropOffSuggestionEvent(
+  //                         addressSuggestion:
+  //                             state.searchResultsForDropOff[index],
+  //                       ),
+  //                     );
+  //               },
+  //               leading: const Icon(Icons.location_on),
+  //               title: Text(
+  //                 state.searchResultsForDropOff[index].text,
+  //                 style: textTheme.bodyLarge!.copyWith(
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //               subtitle: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Container(
+  //                     height: 1,
+  //                     margin: const EdgeInsets.only(top: 8.0),
+  //                     color: colorScheme.surfaceVariant,
+  //                   ),
+  //                 ],
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
 
-          //       // Button to confirm
-          //       FilledButton(
-          //         style: FilledButton.styleFrom(
-          //           minimumSize: const Size.fromHeight(48.0),
-          //         ),
-          //         onPressed: () {
-          //           context.read<RideBookingBloc>().add(
-          //                 ConfirmDropOffAddressEvent(),
-          //               );
-          //         },
-          //         child: const Text('Confirm destination'),
-          //       )
-          //     ],
-          //   ),
-          // ),
-        // );
+  //       // Button to confirm
+  //       FilledButton(
+  //         style: FilledButton.styleFrom(
+  //           minimumSize: const Size.fromHeight(48.0),
+  //         ),
+  //         onPressed: () {
+  //           context.read<RideBookingBloc>().add(
+  //                 ConfirmDropOffAddressEvent(),
+  //               );
+  //         },
+  //         child: const Text('Confirm destination'),
+  //       )
+  //     ],
+  //   ),
+  // ),
+  // );
   // }
-  
 
   // Future<void> _cameraToPosition(LatLng pos) async {
   //   final GoogleMapController controller = await _mapController.future;
@@ -586,10 +592,10 @@ class _MapPageState extends State<MapPage> {
   // }
 
   Future<Position> getUserCurrentLocation() async {
-
-    await Geolocator.requestPermission().then((value) {
-    }).onError((error, stackTrace) {
-      print("error"+error.toString());
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) {
+      print("error" + error.toString());
     });
 
     return await Geolocator.getCurrentPosition();
@@ -663,10 +669,10 @@ class _MapPageState extends State<MapPage> {
     showModalBottomSheet<dynamic>(
       isScrollControlled: true,
       context: context,
-      builder: (context) => LocationInputContainer(), // Widget for location input
+      builder: (context) =>
+          LocationInputContainer(), // Widget for location input
     );
   }
-
 }
 
 Future<void> _cameraToPosition(LatLng pos) async {
@@ -680,9 +686,7 @@ Future<void> _cameraToPosition(LatLng pos) async {
   );
 }
 
-
 class LocationInputContainer extends StatefulWidget {
-
   @override
   _LocationInputContainerState createState() => _LocationInputContainerState();
 }
@@ -690,7 +694,7 @@ class LocationInputContainer extends StatefulWidget {
 class _LocationInputContainerState extends State<LocationInputContainer> {
   String _selectedLocation = ""; // Stores user-selected location
   // List<String> _filteredStations = [];
-  
+
   // Function to handle location selection (from Autocomplete or Done button)
   void onLocationSelected(String location) {
     setState(() {
@@ -700,7 +704,6 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
     updateTextButton(context, location);
     Navigator.pop(context); // Close the bottom sheet
   }
-
 
   // @override
   // void dispose() {
@@ -712,52 +715,52 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * 0.87,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(8.0),
+      height: MediaQuery.of(context).size.height * 0.87,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(8.0),
+        ),
+      ),
+      // ... (Container decoration and padding)
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Text(
+              firstButton ? 'Select your Origin' : 'Select your Destination',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-          ),
-        // ... (Container decoration and padding)
-        child: SafeArea(
-          top: false,
-          child: Column(
-            children: [
-              
-              Text(
-                firstButton ? 'Select your Origin' : 'Select your Destination',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+            const SizedBox(height: 4.0),
+            Text(
+              'Type and pick from the suggestions',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 15,
               ),
-              const SizedBox(height: 4.0),
-              Text(
-                'Type and pick from the suggestions',
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 15,
-                ),
-              ),
-              Divider(height: 32.0),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        
-                        TextFormField(
-                          textCapitalization: TextCapitalization.words,
-                          textAlignVertical: TextAlignVertical.center,
-                          style: TextStyle(
-                            color: firstButton ? Colors.indigo : Colors.green,
-                            fontSize: 20,
-                          ),
-                          //controller: dropOffAddressController,
-                          controller: firstButton ? _originInputController : _destinationInputController,
-                          decoration: InputDecoration(
+            ),
+            Divider(height: 32.0),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        textCapitalization: TextCapitalization.words,
+                        textAlignVertical: TextAlignVertical.center,
+                        style: TextStyle(
+                          color: firstButton ? Colors.indigo : Colors.green,
+                          fontSize: 20,
+                        ),
+                        //controller: dropOffAddressController,
+                        controller: firstButton
+                            ? _originInputController
+                            : _destinationInputController,
+                        decoration: InputDecoration(
                             isDense: true,
                             hintText: "Select Station",
                             prefixIcon: Icon(
@@ -765,152 +768,160 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
                               size: 20,
                               color: firstButton ? Colors.indigo : Colors.green,
                             ),
-
                             suffixIcon: IconButton(
                               onPressed: () {
                                 if (firstButton) {
                                   _originInputController.clear();
                                   setState(() {
-                                    _filteredStations = brtStationsLatLng.keys.toList();
+                                    _filteredStations =
+                                        brtStationsLatLng.keys.toList();
                                     //_filteredStations = brtStationsLagos;
                                   });
-
                                 } else {
                                   _destinationInputController.clear();
                                   setState(() {
-                                    _filteredStations = brtStationsLatLng.keys.toList();
+                                    _filteredStations =
+                                        brtStationsLatLng.keys.toList();
                                     // _filteredStations = brtStationsLagos;
-                                  });                                
+                                  });
                                 }
                               },
                               icon: Icon(
                                 Icons.close_rounded,
-                                size : 20,
+                                size: 20,
                               ),
-                              
-                            )
-                          ),
-                          onChanged: (String value) {
-                            setState(() {
-                              _filteredStations = value.isEmpty
-                              ? brtStationsLatLng.keys.toList()
-                              : brtStationsLatLng.keys.toList().where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
-                              // ? brtStationsLagos
-                              // : brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-              // List of suggestions
-              Expanded(
-                flex: 1,
-                child: ListView.builder(
-                  itemCount: _filteredStations.length, //state.searchResultsForDropOff.length,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () {
-                        _onStationTap(_filteredStations[index]);
-                        if (!firstButton){
-                          // brtStationsLatLng(_originInputController.text)
-                          stationLatLng = brtStationsLatLng[_destinationInputController.text]!;
-                          // _cameraToPosition(stationLatLng);
-                        } else {
-                          stationLatLng = brtStationsLatLng[_originInputController.text]!;
-                        }
-                        _cameraToPosition(stationLatLng);
-                      },
-                      titleAlignment: ListTileTitleAlignment.titleHeight,
-                      leading: const Icon(Icons.location_on),
-                      title: Text(
-                        _filteredStations[index],
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 18,
-                        ),
+                            )),
+                        onChanged: (String value) {
+                          setState(() {
+                            _filteredStations = value.isEmpty
+                                ? brtStationsLatLng.keys.toList()
+                                : brtStationsLatLng.keys
+                                    .toList()
+                                    .where((station) => station
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
+                            // ? brtStationsLagos
+                            // : brtStationsLagos.where((station) => station.toLowerCase().contains(value.toLowerCase())).toList();
+                          });
+                        },
                       ),
-                      // subtitle: Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.start,
-                      //   children: [
-                      //     Container(
-                      //       height: 1,
-                      //       margin: const EdgeInsets.only(top: 8.0),
-                      //     ),
-                      //   ],
-                      // ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
-              ),
+              ],
+            ),
 
-              // THESE WERE THE GEMINI GENERATED FIELDS
-              // TextField(
-              //   // ... (TextField configuration for location input)
-              //   onChanged: (value) => setState(() => _selectedLocation = value),
-              //   onSubmitted: (value) => onLocationSelected(value), // Handle selection on Done button press
-              // ),
-              // Autocomplete(
-              //   // ... (Autocomplete configuration for suggestions)
-              //   onSuggestionSelected: (suggestion) => onLocationSelected(suggestion),
-              // ),
-              // Button to confirm selection (optional)
-              
-              Divider(height: 32.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => {
-                      Navigator.pop(context),
-                      firstButton ? _originInputController.clear() : _destinationInputController.clear(),
-                      },
-                    child: Text('Cancel',
+            // List of suggestions
+            Expanded(
+              flex: 1,
+              child: ListView.builder(
+                itemCount: _filteredStations
+                    .length, //state.searchResultsForDropOff.length,
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () {
+                      _onStationTap(_filteredStations[index]);
+                      if (!firstButton) {
+                        // brtStationsLatLng(_originInputController.text)
+                        stationLatLng = brtStationsLatLng[
+                            _destinationInputController.text]!;
+                        // _cameraToPosition(stationLatLng);
+                      } else {
+                        stationLatLng =
+                            brtStationsLatLng[_originInputController.text]!;
+                      }
+                      _cameraToPosition(stationLatLng);
+                    },
+                    titleAlignment: ListTileTitleAlignment.titleHeight,
+                    leading: const Icon(Icons.location_on),
+                    title: Text(
+                      _filteredStations[index],
+                      textAlign: TextAlign.left,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
-                        color: Colors.indigo,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
                     ),
+                    // subtitle: Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Container(
+                    //       height: 1,
+                    //       margin: const EdgeInsets.only(top: 8.0),
+                    //     ),
+                    //   ],
+                    // ),
+                  );
+                },
+              ),
+            ),
+
+            // THESE WERE THE GEMINI GENERATED FIELDS
+            // TextField(
+            //   // ... (TextField configuration for location input)
+            //   onChanged: (value) => setState(() => _selectedLocation = value),
+            //   onSubmitted: (value) => onLocationSelected(value), // Handle selection on Done button press
+            // ),
+            // Autocomplete(
+            //   // ... (Autocomplete configuration for suggestions)
+            //   onSuggestionSelected: (suggestion) => onLocationSelected(suggestion),
+            // ),
+            // Button to confirm selection (optional)
+
+            Divider(height: 32.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => {
+                    Navigator.pop(context),
+                    firstButton
+                        ? _originInputController.clear()
+                        : _destinationInputController.clear(),
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.indigo,
+                      fontSize: 20,
+                    ),
                   ),
-                  TextButton(
-                    onPressed: () => {
+                ),
+                TextButton(
+                  onPressed: () => {
                     onLocationSelected(_selectedLocation),
                     // if (!firstButton){
                     //   // brtStationsLatLng(_originInputController.text)
                     //   stationLatLng = brtStationsLatLng[_destinationInputController.text]!,
                     //   _cameraToPosition(stationLatLng),
                     // },
-                    
+
                     _addMarker(stationLatLng)
-                    },
-                    child: Text('Done',
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: Colors.indigo,
-                        fontSize: 20,
-                      ),
+                  },
+                  child: Text(
+                    'Done',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.indigo,
+                      fontSize: 20,
                     ),
                   ),
-                ],
-              ),
-            
-              // ElevatedButton(
-              //   onPressed: () => onLocationSelected(_selectedLocation),
-              //   child: Text('Done'),
-              // ),
-            ],
-          ),
-        ),
-    );
+                ),
+              ],
+            ),
 
-    
+            // ElevatedButton(
+            //   onPressed: () => onLocationSelected(_selectedLocation),
+            //   child: Text('Done'),
+            // ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _onStationTap(String selectedStation) {
@@ -937,8 +948,7 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
   }
 
   void _addMarker(LatLng pos) async {
-    
-    // if (_origin.markerId.toString() == "MarkerId(unsetOrigin)" || 
+    // if (_origin.markerId.toString() == "MarkerId(unsetOrigin)" ||
     // (_origin.markerId.toString() != "MarkerId(unsetOrigin)" && _destination.markerId.toString() != "MarkerId(unsetDestination)")) {
     if (firstButton) {
       // Origin is not set OR Origin & Destination are both set
@@ -956,7 +966,7 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
         //_destination = Marker(markerId: MarkerId("unsetDestination"));
 
         // Reset info
-        _info = null;
+        // _info = null;
       });
     } else {
       // print("Destination time!");
@@ -966,15 +976,16 @@ class _LocationInputContainerState extends State<LocationInputContainer> {
         _destination = Marker(
           markerId: const MarkerId('destination'),
           infoWindow: const InfoWindow(title: 'Destination'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           position: pos,
         );
       });
 
       // Get directions
-      final directions = await DirectionsRepository()
-          .getDirections(origin: _origin.position, destination: pos);
-      setState(() => _info = directions);
+      // final directions = await DirectionsRepository()
+      //     .getDirections(origin: _origin.position, destination: pos);
+      // setState(() => _info = directions);
     }
   }
 }
